@@ -1,0 +1,7 @@
+{
+  "name": "recycleChallenge",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
