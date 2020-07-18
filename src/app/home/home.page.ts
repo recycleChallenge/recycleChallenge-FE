@@ -1,12 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Router } from '@angular/router';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
+  image: any;
+  modalRef: BsModalRef;
+  config = {
+    animated: true,
+  };
 
-  constructor() {}
+  constructor(
+    private modalService: BsModalService,
+    private router: Router
+  ) { }
 
+  ngOnInit() {
+
+  }
+
+  open(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, this.config);
+  }
+
+  close() {
+    this.modalRef.hide();
+    this.router.navigate(['recycle-add']);
+  }
 }
