@@ -8,15 +8,15 @@ export class RecycleItem {
 }
 
 export enum Category {
-    paper,
-    can,
-    metal,
-    bottle,
-    plastic,
-    styrofoam,
-    vinyl,
-    lamp,
-    battery,
+    '종이류',
+    '캔류',
+    '금속류',
+    '병류',
+    '플라스틱류',
+    '스티로폼',
+    '비닐',
+    '폐형광등',
+    '폐건전지'
 }
 
 

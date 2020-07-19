@@ -1,4 +1,6 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { User } from '../model/user';
 import { Recycle } from './../model/recycle';
 import { Category } from './../model/recycle-item';
@@ -21,7 +23,9 @@ export class StaticsComponent implements OnInit {
   rankStatics: { user: string, total: number }[];
   constructor(
     private authService: AuthService,
-    private recycleService: RecycleService
+    private recycleService: RecycleService,
+    private router: Router,
+    private location: Location
   ) { }
 
   ngOnInit() {
@@ -41,6 +45,14 @@ export class StaticsComponent implements OnInit {
     );
   }
 
+  goToMyinfo() {
+    this.router.navigate(['/myinfo'])
+  }
+
+  back() {
+    this.location.back();
+  }
+
   setData() {
     this.count = 0;
     this.authService.getCurrentUser().subscribe(user => {
@@ -48,7 +60,7 @@ export class StaticsComponent implements OnInit {
       this.recycleService.getAll().subscribe(recycles => {
         this.recycles = recycles;
         this.recycles = this.recycles.map(recycle => {
-          const count = recycle.items.map(item => item.count).reduce((a, b) => a + b)
+          const count = recycle.items.map(item => item.count).reduce((a, b) => +a + +b)
           recycle['total'] = count;
           this.count += count;
           return recycle;
@@ -58,7 +70,7 @@ export class StaticsComponent implements OnInit {
         })
         const groupBy = this.groupBy(data, 'locale');
         this.localeStatics = Object.keys(groupBy).map(locale => {
-          const total = groupBy[locale].map(item => item.total).reduce((a, b) => a + b)
+          const total = groupBy[locale].map(item => item.total).reduce((a, b) => +a + +b)
           return { locale, total };
         })
       })

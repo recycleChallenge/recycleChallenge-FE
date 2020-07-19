@@ -23,7 +23,7 @@ const routes: Routes = [
     loadChildren: () => import('./statics/statics.module').then(m => m.StaticsModule)
   },
   {
-    path: '',
+    path: '**',
     redirectTo: 'home',
     pathMatch: 'full'
   },

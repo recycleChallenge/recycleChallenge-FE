@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { User } from '../model/user';
 import { Recycle } from './../model/recycle';
@@ -17,7 +18,8 @@ export class MyinfoComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private recycleService: RecycleService
+    private recycleService: RecycleService,
+    private location: Location,
   ) { }
 
   ngOnInit() {
@@ -30,7 +32,7 @@ export class MyinfoComponent implements OnInit {
       this.recycleService.get(user.userId).subscribe(resp => {
         this.recycles = resp;
         this.recycles.map(recycle => {
-          const total = recycle.items.map(item => item.count).reduce((a, b) => a + b)
+          const total = recycle.items.map(item => item.count).reduce((a, b) => +a + +b)
           recycle['total'] = total * 10;
           return recycle;
         })
@@ -38,12 +40,20 @@ export class MyinfoComponent implements OnInit {
     })
   }
 
+  goDetail() {
+    alert('서비스 준비중입니다. 조금만 기다려주세요.')
+  }
+
+  back() {
+    this.location.back();
+  }
+
   ionViewDidEnter() {
     this.setData();
   }
 
   trans() {
-    alert('지역화폐 환전 서비스 준비중')
+    alert('곧 지역화폐 환전 서비스가 출시할 예정입니다. 조금만 기다려주세요.')
   }
 
 }

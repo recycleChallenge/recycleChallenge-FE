@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonSlides } from '@ionic/angular';
@@ -19,8 +20,9 @@ import { UserService } from './../services/user.service';
 export class RecycleEstimateComponent implements OnInit {
   recycles: Recycle[];
   Category = Category;
+  isLoaded = false;
   isEnd = false;
-  @ViewChild('slides') slides: IonSlides;
+  @ViewChild(IonSlides) slides: IonSlides;
   user: User;
   modalRef: BsModalRef;
   config = {
@@ -35,11 +37,20 @@ export class RecycleEstimateComponent implements OnInit {
     private ratingService: RatingService,
     private authService: AuthService,
     private modalService: BsModalService,
-    private router: Router
+    private router: Router,
+    private location: Location
   ) { }
+
+  goToMyinfo() {
+    this.router.navigate(['/myinfo'])
+  }
 
   ngOnInit() {
 
+  }
+
+  ionViewDidEnter() {
+    this.isLoaded = false;
     this.authService.getCurrentUser().subscribe(user => {
       this.user = user;
       this.recycleService.getAll().subscribe(resp => {
@@ -53,6 +64,7 @@ export class RecycleEstimateComponent implements OnInit {
           })
         })
         setTimeout(() => {
+          this.isLoaded = true;
           this.recycles = this.recycles.filter(recycle => {
             return recycle.rating.userId !== user.userId
           })
@@ -60,9 +72,7 @@ export class RecycleEstimateComponent implements OnInit {
             alert('모든 평가를 마쳤습니다. 잠시 후 다시 평가해주세요')
             this.router.navigate(['/home'])
           }
-          this.slides.lockSwipeToPrev(true).then(resp => {
-
-          })
+          // this.slides.lockSwipeToPrev(true);
         }, 300)
       })
     })
@@ -77,6 +87,7 @@ export class RecycleEstimateComponent implements OnInit {
   }
 
   next() {
+    this.slides.lockSwipeToPrev(true);
     this.getPoint();
     this.slides.isEnd().then(isEnd => {
       if (isEnd) {
@@ -98,7 +109,6 @@ export class RecycleEstimateComponent implements OnInit {
     recycle.rating.good += 1;
     recycle.rating.userId = this.user.userId;
     this.ratingService.estimate(recycle.rating).subscribe(resp => {
-      alert('평가완료')
       this.setRating();
       this.next();
     });
@@ -110,17 +120,24 @@ export class RecycleEstimateComponent implements OnInit {
   }
 
   bad() {
-    this.modalRef.hide();
-    this.selectedRecycle.rating.bad += 1;
-    this.selectedRecycle.rating.userId = this.user.userId;
-    this.ratingService.estimate(this.selectedRecycle.rating).subscribe(resp => {
-      const badReason = new BadReason(0, this.selectedRecycle.rating.ratingId, this.reason);
-      this.ratingService.addBadReason(badReason).subscribe(resp => {
-        alert('평가완료');
-        this.reason = '';
-        this.setRating();
-        this.next();
-      })
-    });
+    if (this.reason == '') {
+      alert('의견을 작성해주세요')
+    } else {
+      this.modalRef.hide();
+      this.selectedRecycle.rating.bad += 1;
+      this.selectedRecycle.rating.userId = this.user.userId;
+      this.ratingService.estimate(this.selectedRecycle.rating).subscribe(resp => {
+        const badReason = new BadReason(0, this.selectedRecycle.rating.ratingId, this.reason);
+        this.ratingService.addBadReason(badReason).subscribe(resp => {
+          this.reason = '';
+          this.setRating();
+          this.next();
+        })
+      });
+    }
+  }
+
+  back() {
+    this.location.back();
   }
 }

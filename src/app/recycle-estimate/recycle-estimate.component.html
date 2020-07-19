@@ -1,16 +1,39 @@
-<ion-content fullscreen class="ion-padding" scroll-y="false">
+<ion-content fullscreen class="ion-padding" scroll-y="false" *ngIf="isLoaded">
+
+  <ion-row>
+    <ion-col class="text-center">
+      <img class="float-left" src="/assets/back.png" style="width: 10px;margin-top:5px" (click)="back()">
+      <img src="/assets/esti.png" style="width: 80px;">
+      <div class="float-right" style="color:#999999;margin-top: 6px;" (click)="goToMyinfo()">
+        <img [src]="user.image" width="40px">
+        <ion-label>{{user.name}}</ion-label>
+      </div>
+    </ion-col>
+  </ion-row>
+  <hr style="margin: 0px;">
+
+
   <ion-slides #slides>
     <ion-slide *ngFor="let recycle of recycles">
-      <div class="slide">
-        <img [src]="recycle.userId['image']" style="height: 40px;width: 40px;" /><br>
-        <p>{{recycle.userId['name']}}님의 리사이클 챌린지</p>
-        <p>{{recycle.time|date:'yyyy-MM-dd mm:ss'}}</p>
-        <img [src]="recycle.image" style="max-height: 400px;" />
+      <div class="slide" *ngIf="!!recycle.rating && !!recycle.userId['image'] && !!recycle.userId['name']">
+        <span
+          style="color:#333333;font-size: 14px;letter-spacing: -0.04em;">{{recycle.time|date:'yyyy-MM-dd HH:mm'}}</span><br>
+        <img [src]="recycle.userId['image']" style="height: 25px;" />
+        <span style="color: #777777;font-size: 14px;"><span
+            style="font-weight: bold;">{{recycle.userId['name']}}</span>님의 리사이클챌린지</span>
+        <img [src]="recycle.image" style="max-height: 400px;width:100%" />
         <br>
-        <ion-button color="success" (click)="good(recycle)">good {{recycle.rating.good}}</ion-button>
-        <ion-button color="success" (click)="badOpen(recycle, template)">bad {{recycle.rating.bad}}</ion-button>
+        <ion-button color="success" (click)="good(recycle)">
+          <ion-icon name="thumbs-up-outline"></ion-icon>&nbsp;{{recycle.rating.good}}
+        </ion-button>
+        <ion-button color="success" (click)="badOpen(recycle, template)">
+          <ion-icon name="thumbs-down-outline"></ion-icon>&nbsp;
+          {{recycle.rating.bad}}
+        </ion-button>
         <div *ngFor="let item of recycle.items">
-          {{Category[item.category]}} X {{item.count}}
+          <div *ngFor="let item of recycle.items">
+            <p style="margin:0px;color:#999999;font-size:17px">{{Category[item.category]}} X {{item.count}}</p>
+          </div>
         </div>
       </div>
     </ion-slide>
@@ -19,7 +42,7 @@
 
 <ng-template #template>
   <div class="modal-header">
-    <h4 class="modal-title pull-left">의견을 남겨주세요</h4>
+    <h4 class="modal-title pull-left" style="font-size:17px">더 나은 재활용 생활을 위해 의견을 남겨주세요</h4>
   </div>
   <div class="modal-body">
     <ion-input class="form-control" type="text" [(ngModel)]="reason"></ion-input>

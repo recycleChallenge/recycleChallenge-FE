@@ -69,12 +69,12 @@ export class HomePage implements OnInit {
   }
 
   estimate() {
-    this.router.navigate(['recycle-estimate'])
+    this.router.navigate(['/recycle-estimate'])
   }
 
   close() {
     this.modalRef.hide();
-    this.router.navigate(['recycle-add']);
+    this.router.navigate(['/recycle-add']);
   }
 
   goToMyinfo() {
