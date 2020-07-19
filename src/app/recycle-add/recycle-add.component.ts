@@ -3,6 +3,8 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import * as moment from 'moment';
+import { RatingService } from '../services/rating.service';
+import { Rating } from './../model/rating';
 import { Category, RecycleItem } from './../model/recycle-item';
 import { PhotoService } from './../services/photo.service';
 import { RecycleService } from './../services/recycle.service';
@@ -33,7 +35,8 @@ export class RecycleAddComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private fb: FormBuilder,
     private recycleServie: RecycleService,
-    private router: Router
+    private router: Router,
+    private ratingService: RatingService
   ) { }
 
   ngOnInit() {
@@ -81,8 +84,11 @@ export class RecycleAddComponent implements OnInit {
       this.recycleServie.add(recycle).subscribe(recycle => {
         const itemList = (items as RecycleItem[]).map(item => new RecycleItem(0, recycle.recycleId, +Category[item.category], item.count))
         this.recycleServie.addItems(itemList).subscribe(resp => {
-          alert('감사합니다 오늘도 지구를 위해 좋은일을 하셨어요');
-          this.router.navigate(['/home']);
+          const rating = new Rating(0, recycle.recycleId, 0, 0);
+          this.ratingService.add(rating).subscribe(resp => {
+            alert('감사합니다 오늘도 지구를 위해 좋은일을 하셨어요');
+            this.router.navigate(['/home']);
+          })
         })
       })
     });

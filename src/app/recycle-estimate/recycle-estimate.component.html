@@ -1,18 +1,18 @@
-<ion-content>
-  <ion-grid fixed>
-    <ion-row *ngFor="let recycle of recycles">
-      <ion-col>
-        <img [src]="recycle.userId['image']" height="40"><br>
+<ion-content fullscreen class="ion-padding" scroll-y="false">
+  <ion-slides>
+    <ion-slide *ngFor="let recycle of recycles">
+      <div class="slide">
+        <img [src]="recycle.userId['image']" style="height: 40px;width: 40px;" /><br>
         <p>{{recycle.userId['name']}}님의 리사이클 챌린지</p>
         <p>{{recycle.time|date:'yyyy-MM-dd mm:ss'}}</p>
-        <img [src]="recycle.image" />
-        <ion-button color="success" (click)="good(recycle)">good</ion-button>
-        <ion-button color="success" (click)="bad(recycle)">bad</ion-button>
+        <img [src]="recycle.image" style="max-height: 500px;" />
         <br>
+        <ion-button color="success" (click)="good(recycle)">good {{recycle.rating.good}}</ion-button>
+        <ion-button color="success" (click)="bad(recycle)">bad {{recycle.rating.bad}}</ion-button>
         <div *ngFor="let item of recycle.items">
           {{Category[item.category]}} X {{item.count}}
         </div>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+      </div>
+    </ion-slide>
+  </ion-slides>
 </ion-content>
