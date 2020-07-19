@@ -14,7 +14,8 @@ ex) /Users/test/project/recycleChallenge-BE/static
 npm run build
 ```
 
-
+## 데모 링크
+https://www.youtube.com/watch?v=ehBBESus0h8&feature=youtu.be
 ## 데모 화면
 ### 메인
 ![](/images/메인.png)
