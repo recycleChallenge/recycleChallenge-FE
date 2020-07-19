@@ -13,3 +13,18 @@ ex) /Users/test/project/recycleChallenge-BE/static
 ```
 npm run build
 ```
+
+
+## 데모 화면
+### 메인
+![](/images/메인.png)
+### 분리수거
+![](/images/분리수거.png)
+### 재활용
+![](/images/재활용.png)
+### 평가하가
+![](/images/평가하기.png)
+### 통계
+![](/images/통계.png)
+### 마이페이지
+![](/images/마이페이지.png)
