@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { forkJoin, Observable, of } from 'rxjs';
+import { Rating } from './../model/rating';
 import { Recycle } from './../model/recycle';
 import { RecycleItem } from './../model/recycle-item';
 import { UrlService } from './url.service';
@@ -15,7 +16,7 @@ export class RecycleService {
     private http: HttpClient
   ) { }
 
-  add(recycle: any): Observable<Recycle> {
+  add(recycle: FormData): Observable<Recycle> {
     return this.http.post<Recycle>(`${this.urlPrefix}/recycles/`, recycle)
   }
 
@@ -26,5 +27,13 @@ export class RecycleService {
     })
     if (requests.length === 0) return of([]);
     return forkJoin(requests);
+  }
+
+  getAll(): Observable<Recycle[]> {
+    return this.http.get<Recycle[]>(`${this.urlPrefix}/recycles`)
+  }
+
+  estimate(ratingId: number, rating: Rating) {
+    return this.http.put(`${this.urlPrefix}/ratings/${ratingId}`, rating)
   }
 }

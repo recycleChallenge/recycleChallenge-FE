@@ -2,7 +2,7 @@ export class RecycleItem {
     constructor(
         public itemId: number,
         public recycleId: number,
-        public category: Category,
+        public category: number,
         public count: number,
     ) { }
 }

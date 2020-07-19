@@ -27,6 +27,10 @@ export class HomePage implements OnInit {
     this.modalRef = this.modalService.show(template, this.config);
   }
 
+  estimate() {
+    this.router.navigate(['recycle-estimate'])
+  }
+
   close() {
     this.modalRef.hide();
     this.router.navigate(['recycle-add']);

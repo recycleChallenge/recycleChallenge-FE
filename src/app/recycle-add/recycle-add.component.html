@@ -1,0 +1,45 @@
+<ion-content>
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col>
+        <img [src]="image" height="450">
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <div class="category">
+          <p *ngFor="let category of categoryList">
+            <ion-badge (click)="onSelectCategory(category)">{{category}}</ion-badge>
+          </p>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <form [formGroup]="form">
+          <div formArrayName="items" *ngFor="let item of form.get('items')['controls']; let i = index;">
+            <div [formGroupName]="i" style="display: flex;">
+              <ion-item>
+                <ion-label position="floating">{{form.value.items[i].category}} 수량</ion-label>
+                <ion-input type="number" [formControlName]="'category'" hidden></ion-input>
+                <ion-input type="number" [formControlName]="'count'" clearInput></ion-input>
+              </ion-item>
+              <hr>
+              <ion-item lines="none">
+                <ion-button slot="end" (click)="minusItem(i)" color="danger">삭제</ion-button>
+              </ion-item>
+            </div>
+          </div>
+        </form>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button color="success" (click)="add()">등록하기</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
