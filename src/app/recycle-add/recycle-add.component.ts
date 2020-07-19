@@ -22,6 +22,7 @@ declare var google;
 })
 export class RecycleAddComponent implements OnInit {
   image: any;
+  isUploading = false;
   file: File;
   categoryList = [
     '종이류',
@@ -89,8 +90,10 @@ export class RecycleAddComponent implements OnInit {
   }
 
   add() {
+    this.isUploading = true;
     if (this.form.invalid) {
       alert('종류와 수량을 입력해주세요')
+      this.isUploading = false;
     } else {
       navigator.geolocation.getCurrentPosition((position) => {
 
@@ -121,6 +124,7 @@ export class RecycleAddComponent implements OnInit {
                   this.userService.put(this.user).subscribe(resp => {
                     alert('감사합니다. 지구를 위한 좋은 일 하나 성공!');
                     this.router.navigate(['/home']);
+                    this.isUploading = false;
                   })
                 })
               })

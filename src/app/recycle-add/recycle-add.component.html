@@ -53,8 +53,11 @@
     </ion-row>
 
     <ion-row>
-      <ion-col style="text-align: center;">
+      <ion-col style="text-align: center;" *ngIf="!isUploading">
         <img src="/assets/upload.png" style="width:244px" (click)="add()">
+      </ion-col>
+      <ion-col style="text-align: center;" *ngIf="isUploading">
+        업로드 중입니다. 잠시만 기다려 주세요<img src="/assets/loading.gif" style="width:30px">
       </ion-col>
     </ion-row>
   </ion-grid>
