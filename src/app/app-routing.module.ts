@@ -15,6 +15,14 @@ const routes: Routes = [
     loadChildren: () => import('./recycle-estimate/recycle-estimate.module').then(m => m.RecycleEstimateModule)
   },
   {
+    path: 'myinfo',
+    loadChildren: () => import('./myinfo/myinfo.module').then(m => m.MyinfoModule)
+  },
+  {
+    path: 'statics',
+    loadChildren: () => import('./statics/statics.module').then(m => m.StaticsModule)
+  },
+  {
     path: '',
     redirectTo: 'home',
     pathMatch: 'full'

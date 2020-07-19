@@ -2,18 +2,30 @@
   <ion-grid fixed>
     <ion-row>
       <ion-col class="text-center">
-        리사이클 챌린지
-        <div class="float-right">
+        <img class="float-left" src="/assets/brand.png" style="width: 120px">
+        <div class="float-right" (click)="goToMyinfo()" style="color:#999999">
           <img [src]="user.image" width="40px">
           <ion-label>{{user.name}}</ion-label>
         </div>
       </ion-col>
     </ion-row>
+    <hr>
 
     <ion-row>
       <ion-col class="text-center">
-        {{user.point}}점
+        <img src="/assets/brand-2.png" style="width: 200px">
+        <br><br>
+        <img src="/assets/recycle.png" style="width: 140px">
+        <p class="point">{{user.point}}</p>
+        <p class="point-text" style="color: #999999;">포인트</p>
         <img [src]="image" height="500px">
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col class="text-center">
+        <img src="/assets/brand-3.png" style="width: 200px">
+        <ion-button class="btn-orange" color="success" (click)="goToStatics(template)">통계 확인하기</ion-button>
       </ion-col>
     </ion-row>
 
@@ -21,6 +33,41 @@
       <ion-col class="text-center">
         <ion-button color="success" (click)="open(template)">재활용하기</ion-button>
         <ion-button color="success" (click)="estimate()">평가하기</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<ion-content *ngIf="!user">
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col class="text-center">
+        리사이클 챌린지
+        <div class="float-right">
+          <ion-badge (click)="openLogin(loginTpl)">로그인</ion-badge>
+          <ion-badge (click)="openSignup(signUpTpl)">가입하기</ion-badge>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col class="text-center">
+        {{128309|number}}점
+        <img [src]="image" height="500px">
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col class="text-center">
+        전체 리사이클챌린지 랭크를 확인해보세요!
+        <ion-button color="success">통계 확인하기</ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col class="text-center">
+        <ion-button color="success">재활용하기</ion-button>
+        <ion-button color="success">평가하기</ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -36,5 +83,43 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-default" (click)="close()">확인</button>
+  </div>
+</ng-template>
+
+<ng-template #loginTpl>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">로그인</h4>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="loginForm">
+      <ion-label>메일</ion-label>
+      <ion-input class="form-control" type="text" [formControlName]="'mail'"></ion-input>
+      <ion-label>비밀번호</ion-label>
+      <ion-input class="form-control" type="text" [formControlName]="'password'"></ion-input>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" [disabled]="loginForm.invalid" (click)="login()">확인</button>
+  </div>
+</ng-template>
+
+<ng-template #signUpTpl>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">가입하기</h4>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="signupForm">
+      <ion-label>이름</ion-label>
+      <ion-input class="form-control" type="text" [formControlName]="'name'"></ion-input>
+      <ion-label>메일</ion-label>
+      <ion-input class="form-control" type="text" [formControlName]="'mail'"></ion-input>
+      <ion-label>비밀번호</ion-label>
+      <ion-input class="form-control" type="text" [formControlName]="'password'"></ion-input>
+      <ion-label>이미지</ion-label>
+      <input [formControlName]="'file'" id="file" type="file" class="form-control" (change)="onFileChange($event)">
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" [disabled]="signupForm.invalid" (click)="signUp()">확인</button>
   </div>
 </ng-template>

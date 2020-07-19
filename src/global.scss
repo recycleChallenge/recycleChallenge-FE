@@ -24,3 +24,22 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url(/assets/NotoSansKR-Light.ttf) format("truetype");
+    font-weight: 300;
+}
+
+body {
+    font-family: 'NotoSansKR', sans-serif;
+}
+
+
+.btn-orange {
+    background: #FFAD33;
+    border-radius: 4px;
+    text-align: center;
+    letter-spacing: -0.04em;
+    color: #FFFFFF;
+}

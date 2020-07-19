@@ -33,4 +33,8 @@ export class RecycleService {
   getAll(): Observable<Recycle[]> {
     return this.http.get<Recycle[]>(`${this.urlPrefix}/recycles`)
   }
+
+  get(userId: number): Observable<Recycle[]> {
+    return this.http.get<Recycle[]>(`${this.urlPrefix}/recycles?userId=${userId}`)
+  }
 }

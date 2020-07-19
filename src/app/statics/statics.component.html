@@ -1,0 +1,72 @@
+<ion-content *ngIf="!!user">
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col class="text-center">
+        통계
+        <div class="float-right">
+          <img [src]="user.image" width="40px">
+          <ion-label>{{user.name}}</ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <p>전체 재활용 수: {{count|number}} 개</p>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <p>지역 별 재활용 수</p>
+        <table class="table">
+          <tr>
+            <th>지역</th>
+            <th>개수</th>
+          </tr>
+          <tr *ngFor="let localeStatic of localeStatics">
+            <td>{{localeStatic.locale}}</td>
+            <td>{{localeStatic.total}}</td>
+          </tr>
+        </table>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <p>지역 별 랭킹</p>
+        <table class="table">
+          <tr>
+            <th>지역</th>
+            <th>랭커</th>
+          </tr>
+          <tr>
+            <td>서울</td>
+            <td>user1</td>
+          </tr>
+          <tr>
+            <td>경기</td>
+            <td>user1</td>
+          </tr>
+          <tr>
+            <td>전리</td>
+            <td>user1</td>
+          </tr>
+          <tr>
+            <td>충청</td>
+            <td>user1</td>
+          </tr>
+          <tr>
+            <td>경상</td>
+            <td>user1</td>
+          </tr>
+          <tr>
+            <td>강원</td>
+            <td>user1</td>
+          </tr>
+        </table>
+      </ion-col>
+    </ion-row>
+
+  </ion-grid>
+</ion-content>

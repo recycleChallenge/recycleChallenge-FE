@@ -9,6 +9,7 @@ export class Recycle {
         public time: string,
         public lat: number,
         public lon: number,
+        public locale: string,
         public items?: RecycleItem[],
         public rating?: Rating
     ) { }

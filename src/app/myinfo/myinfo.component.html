@@ -1,0 +1,59 @@
+<ion-content *ngIf="!!user">
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col class="text-center">
+        마이페이지
+        <div class="float-right">
+          <img [src]="user.image" width="40px">
+          <ion-label>{{user.name}}</ion-label>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <p>나의 리사이클챌린지 점수</p>
+        {{user.point|number}} 포인트
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <div style="overflow-y:scroll;height:500px">
+          <ion-list>
+            <ion-item *ngFor="let recycle of recycles">
+              <p>{{recycle.time|date:'yyyy-MM-dd HH:mm'}}</p>
+              <p>상세보기</p>
+
+              <div *ngFor="let item of recycle.items">
+                <p>{{Category[item.category]}} X {{item.count}}</p>
+              </div>
+
+              <ion-badge>적립됨</ion-badge>
+              <p>{{recycle['total']}} 포인트</p>
+            </ion-item>
+          </ion-list>
+        </div>
+      </ion-col>
+    </ion-row>
+
+    <ion-row>
+      <ion-col>
+        <ion-button color="success" (click)="trans()">환전하기</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
+
+<!-- <ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">규칙</h4>
+  </div>
+  <div class="modal-body">
+    1. 비우기
+    2. 씻기
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" (click)="close()">확인</button>
+  </div>
+</ng-template> -->

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { User } from './../model/user';
 import { UrlService } from './url.service';
@@ -18,11 +18,31 @@ export class AuthService {
   ) { }
 
   getCurrentUser(): Observable<User> {
-    return this.http.get<User>(`${this.urlPrefix}/users?user=1`).pipe(
-      map(users => {
-        return users[0];
+    const session = JSON.parse(localStorage.getItem('session'))
+    if (!!session) {
+      return this.http.get<User>(`${this.urlPrefix}/users?mail=${session['mail']}`).pipe(
+        map(users => {
+          return users[0];
+        })
+      );
+    } else {
+      of(new User(-99, "", "", "", 0, ""))
+    }
+  }
+
+  login(mail: string, password: string) {
+    return this.http.post(`/login`, { mail, password }, { responseType: 'text' }).pipe(
+      map(result => {
+        return result === 'True'
       })
     );
-    // return of(new User(1, 'name', 'mail', 'pwd', 0, ''))
+  }
+
+  logout() {
+    localStorage.removeItem('session');
+  }
+
+  signup(user: FormData): Observable<User> {
+    return this.http.post<User>(`${this.urlPrefix}/users/`, user);
   }
 }
