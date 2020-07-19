@@ -6,8 +6,11 @@ import * as moment from 'moment';
 import { RatingService } from '../services/rating.service';
 import { Rating } from './../model/rating';
 import { Category, RecycleItem } from './../model/recycle-item';
+import { User } from './../model/user';
+import { AuthService } from './../services/auth.service';
 import { PhotoService } from './../services/photo.service';
 import { RecycleService } from './../services/recycle.service';
+import { UserService } from './../services/user.service';
 @Component({
   selector: 'app-recycle-add',
   templateUrl: './recycle-add.component.html',
@@ -29,6 +32,7 @@ export class RecycleAddComponent implements OnInit {
   ]
   form: FormGroup;
   items: FormArray;
+  user: User;
 
   constructor(
     private photoService: PhotoService,
@@ -36,10 +40,15 @@ export class RecycleAddComponent implements OnInit {
     private fb: FormBuilder,
     private recycleServie: RecycleService,
     private router: Router,
-    private ratingService: RatingService
+    private ratingService: RatingService,
+    private userService: UserService,
+    private authSerivce: AuthService
   ) { }
 
   ngOnInit() {
+    this.authSerivce.getCurrentUser().subscribe(user => {
+      this.user = user;
+    })
     this.form = this.fb.group({
       items: this.fb.array([], Validators.required)
     })
@@ -84,10 +93,14 @@ export class RecycleAddComponent implements OnInit {
       this.recycleServie.add(recycle).subscribe(recycle => {
         const itemList = (items as RecycleItem[]).map(item => new RecycleItem(0, recycle.recycleId, +Category[item.category], item.count))
         this.recycleServie.addItems(itemList).subscribe(resp => {
-          const rating = new Rating(0, recycle.recycleId, 0, 0);
+          const rating = new Rating(0, recycle.recycleId, 0, 0, 0);
           this.ratingService.add(rating).subscribe(resp => {
-            alert('감사합니다 오늘도 지구를 위해 좋은일을 하셨어요');
-            this.router.navigate(['/home']);
+            const point = itemList.map(item => item.count).reduce((a, b) => a + b) * 10;
+            this.user.point += point;
+            this.userService.put(this.user).subscribe(resp => {
+              alert('감사합니다 오늘도 지구를 위해 좋은일을 하셨어요');
+              this.router.navigate(['/home']);
+            })
           })
         })
       })

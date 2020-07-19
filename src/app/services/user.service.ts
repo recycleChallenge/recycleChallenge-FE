@@ -17,4 +17,8 @@ export class UserService {
   get(userId: number): Observable<User> {
     return this.http.get<User>(`${this.urlPrefix}/users/${userId}`)
   }
+
+  put(user: User): Observable<User> {
+    return this.http.put<User>(`/users`, user)
+  }
 }

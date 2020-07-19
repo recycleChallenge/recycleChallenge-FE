@@ -1,6 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { IonSlides } from '@ionic/angular';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Recycle } from '../model/recycle';
+import { User } from '../model/user';
+import { AuthService } from '../services/auth.service';
 import { RatingService } from '../services/rating.service';
+import { BadReason } from './../model/badReason';
 import { Category } from './../model/recycle-item';
 import { RecycleService } from './../services/recycle.service';
 import { UserService } from './../services/user.service';
@@ -13,23 +19,51 @@ import { UserService } from './../services/user.service';
 export class RecycleEstimateComponent implements OnInit {
   recycles: Recycle[];
   Category = Category;
+  isEnd = false;
+  @ViewChild('slides') slides: IonSlides;
+  user: User;
+  modalRef: BsModalRef;
+  config = {
+    animated: true,
+  };
+  reason: string;
+  selectedRecycle: Recycle;
 
   constructor(
     private recycleService: RecycleService,
     private userService: UserService,
-    private ratingService: RatingService
+    private ratingService: RatingService,
+    private authService: AuthService,
+    private modalService: BsModalService,
+    private router: Router
   ) { }
 
   ngOnInit() {
-    this.recycleService.getAll().subscribe(resp => {
-      this.recycles = resp;
-      this.recycles.map(recycle => {
-        this.userService.get(+recycle.userId).subscribe(user => {
-          recycle.userId = user;
+
+    this.authService.getCurrentUser().subscribe(user => {
+      this.user = user;
+      this.recycleService.getAll().subscribe(resp => {
+        this.recycles = resp;
+        this.recycles.forEach(recycle => {
+          this.userService.get(+recycle.userId).subscribe(user => {
+            recycle.userId = user;
+          })
+          this.ratingService.get(recycle.recycleId).subscribe(rating => {
+            recycle.rating = rating[0];
+          })
         })
-        this.ratingService.get(recycle.recycleId).subscribe(rating => {
-          recycle.rating = rating[0];
-        })
+        setTimeout(() => {
+          this.recycles = this.recycles.filter(recycle => {
+            return recycle.rating.userId !== user.userId
+          })
+          if (this.recycles.length === 0) {
+            alert('모든 평가를 마쳤습니다. 잠시 후 다시 평가해주세요')
+            this.router.navigate(['/home'])
+          }
+          this.slides.lockSwipeToPrev(true).then(resp => {
+
+          })
+        }, 300)
       })
     })
   }
@@ -42,19 +76,51 @@ export class RecycleEstimateComponent implements OnInit {
     })
   }
 
+  next() {
+    this.getPoint();
+    this.slides.isEnd().then(isEnd => {
+      if (isEnd) {
+        alert('모든 평가를 마쳤습니다. 잠시 후 다시 평가해주세요')
+        this.router.navigate(['/home'])
+      }
+      else {
+        this.slides.slideNext();
+      }
+    })
+  }
+
+  getPoint() {
+    this.user.point += 2;
+    this.userService.put(this.user).subscribe(resp => { })
+  }
+
   good(recycle: Recycle) {
     recycle.rating.good += 1;
+    recycle.rating.userId = this.user.userId;
     this.ratingService.estimate(recycle.rating).subscribe(resp => {
       alert('평가완료')
       this.setRating();
+      this.next();
     });
   }
 
-  bad(recycle: Recycle) {
-    recycle.rating.bad += 1;
-    this.ratingService.estimate(recycle.rating).subscribe(resp => {
-      alert('평가완료')
-      this.setRating();
+  badOpen(recycle: Recycle, template: TemplateRef<any>) {
+    this.selectedRecycle = recycle;
+    this.modalRef = this.modalService.show(template, this.config);
+  }
+
+  bad() {
+    this.modalRef.hide();
+    this.selectedRecycle.rating.bad += 1;
+    this.selectedRecycle.rating.userId = this.user.userId;
+    this.ratingService.estimate(this.selectedRecycle.rating).subscribe(resp => {
+      const badReason = new BadReason(0, this.selectedRecycle.rating.ratingId, this.reason);
+      this.ratingService.addBadReason(badReason).subscribe(resp => {
+        alert('평가완료');
+        this.reason = '';
+        this.setRating();
+        this.next();
+      })
     });
   }
 }

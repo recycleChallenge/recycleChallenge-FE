@@ -1,6 +1,8 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { User } from '../model/user';
+import { AuthService } from './../services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -13,14 +15,26 @@ export class HomePage implements OnInit {
   config = {
     animated: true,
   };
+  user: User;
 
   constructor(
     private modalService: BsModalService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) { }
 
   ngOnInit() {
+    this.setUser();
+  }
 
+  setUser() {
+    this.authService.getCurrentUser().subscribe(user => {
+      this.user = user;
+    })
+  }
+
+  ionViewDidEnter() {
+    this.setUser();
   }
 
   open(template: TemplateRef<any>) {

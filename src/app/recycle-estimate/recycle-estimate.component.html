@@ -1,14 +1,14 @@
 <ion-content fullscreen class="ion-padding" scroll-y="false">
-  <ion-slides>
+  <ion-slides #slides>
     <ion-slide *ngFor="let recycle of recycles">
       <div class="slide">
         <img [src]="recycle.userId['image']" style="height: 40px;width: 40px;" /><br>
         <p>{{recycle.userId['name']}}님의 리사이클 챌린지</p>
         <p>{{recycle.time|date:'yyyy-MM-dd mm:ss'}}</p>
-        <img [src]="recycle.image" style="max-height: 500px;" />
+        <img [src]="recycle.image" style="max-height: 400px;" />
         <br>
         <ion-button color="success" (click)="good(recycle)">good {{recycle.rating.good}}</ion-button>
-        <ion-button color="success" (click)="bad(recycle)">bad {{recycle.rating.bad}}</ion-button>
+        <ion-button color="success" (click)="badOpen(recycle, template)">bad {{recycle.rating.bad}}</ion-button>
         <div *ngFor="let item of recycle.items">
           {{Category[item.category]}} X {{item.count}}
         </div>
@@ -16,3 +16,15 @@
     </ion-slide>
   </ion-slides>
 </ion-content>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">의견을 남겨주세요</h4>
+  </div>
+  <div class="modal-body">
+    <ion-input class="form-control" type="text" [(ngModel)]="reason"></ion-input>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-default" (click)="bad()">확인</button>
+  </div>
+</ng-template>
